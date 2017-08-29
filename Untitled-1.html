@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RCEVOX</title>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css" />
+       
+	<style type="text/css">
+			body{
+				font-family: verdana;
+			}
+			#result{
+				height: 100px;
+				border: 1px solid #ccc;
+				padding: 10px;
+				box-shadow: 0 0 10px 0 #bbb;
+				margin-bottom: 30px;
+				font-size: 14px;
+				line-height: 25px;
+			}
+			button{
+	font-size: 20px;
+	position: absolute;
+	top: 408px;
+	left: 640px;
+			}
+		</style>
+	</head>
+	
+
+<body >
+  <div style="float:right">
+
+  	<script>
+		var f = new Date();
+		document.write(f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear());
+	</script>
+  </div>
+  
+  <div>
+    <p><img src="https://image.ibb.co/c896u5/seidor.png" alt="seidor" border="0"></p>
+  </div>
+  
+  <div>
+    <h4 align="center">RCEVOX Registro Clinico por Voz</h4>
+  </div>
+ 
+  <div>
+    <p>Diagnóstico Clinico</p>
+    <hr>
+  </div>
+  
+    <div>
+  Nombre Paciente:	
+          <select name="select">
+          <option value="value1" selected>Seleccione Paciente</option> 
+          <option value="value2" >Danae Jerez Reyes</option>
+          <option value="value3">Daniela Soto Cabello</option>
+           <option value = "value4">Alejandro Perez Villanueva </option>
+           <option value = "value5">Felipe Castillo Rojas </option>
+           <option value = "value6">Andres Jaramillo Meyer </option>
+           <option value = "value7">Carolina Rolando M </option>
+</select>
+	</div>
+    
+    <div>
+      Fecha: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="date" name="fecha" value="today">
+    </div>	
+    
+    <div>
+    Severidad:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select name"severidad">
+    <option value="value1" selected>Seleccione</option>
+    <option value="value2" >Amenaza para la vida </option>
+    <option value="value3" >Fatal </option>
+    <option value="value4" >Leve </option>
+    <option value="value5" >Leve a Moderada </option>
+    <option value="value6" >Moderada </option>
+    <option value="value7" >Moderada a Severa </option>
+    <option value="value8" >Severa </option>
+
+
+	  </select>
+    </div>
+     
+	<div>
+	  Comentarios:
+	  <div id="result"></div>
+        
+    </div>
+<button onclick="startConverting();"><i class="fa fa-microphone"></i></button>  
+<div>
+       Diagnostico:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<select name"diagnostico">
+      	    <option value="value1" selected>Seleccione diagnóstico</option>
+	        <option value="value11"> Tumor maligno de la piel del cuero cabelludo y del cuello</option>
+            <option value="value12"> Enfermedad renal crónica, etapa 1</option>
+            <option value="value13"> Dolor en la columna dorsal</option>
+            <option value="value14"> Meningitis estreptocócica</option>
+            <option value="value15"> Quiste cerebral</option>
+            <option value="value16"> Asma</option>
+
+		</select>
+<br><br><br><br>
+<input name="boton" type="button" value="Guardar Registro" >
+</div>
+
+ 
+ 
+		
+<script type="text/javascript">
+
+		var r = document.getElementById('result');
+           	var player = document.getElementById('player');
+var handleSuccess = function(stream) {
+    if (window.URL) {
+      player.src = window.URL.createObjectURL(stream);
+    } else {
+      player.src = stream;
+    }
+  };
+		
+
+  			navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      			.then(handleSuccess) 
+
+
+
+			function startConverting () {
+				if('webkitSpeechRecognition' in window){
+					var speechRecognizer = new webkitSpeechRecognition();
+					speechRecognizer.continuous = true;
+					speechRecognizer.interimResults = true;
+					speechRecognizer.lang = 'es-CL';
+					speechRecognizer.start();
+
+					var finalTranscripts = '';
+
+
+					speechRecognizer.onresult = function(event){
+						var interimTranscripts = '';
+						for(var i = event.resultIndex; i < event.results.length; i++){
+							var transcript = event.results[i][0].transcript;
+							transcript.replace("\n", "<br>");
+							if(event.results[i].isFinal){
+								finalTranscripts += transcript;
+							}else{
+								interimTranscripts += transcript;
+							}
+						}
+						r.innerHTML = finalTranscripts + '<span style="color:#999">' + interimTranscripts + '</span>';
+					};
+					speechRecognizer.onerror = function (event) {
+					};
+				}else{
+					r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
+				}
+			}
+
+			
+
+		</script>
+</body>
+</html>
